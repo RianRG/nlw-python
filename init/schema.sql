@@ -3,7 +3,7 @@ CREATE TABLE "events" (
   "title" TEXT NOT NULL,
   "details" TEXT,
   "slug" TEXT NOT NULL,
-  "maximum_attendees" INTEGER
+  "maximumAttendees" INTEGER
 );
 
 CREATE TABLE "attendees" (
