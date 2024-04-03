@@ -7,6 +7,6 @@ dbConnectionHandler.connectDb()
 app = Flask(__name__)
 CORS(app)
 
-from src.main.routes.event_routes import eventRouteBp
+from src.main.event_routes import eventRouteBp
 
 app.register_blueprint(eventRouteBp)
