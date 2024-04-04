@@ -25,6 +25,8 @@ class EventsService:
 
     if not event: raise Exception('Event not found!')
 
+    eventAttendeesCount = self.__eventsRepository.countEventAttendees(eventId)
+
     return HttpResponse(
       body={
         "event": {
@@ -32,7 +34,8 @@ class EventsService:
           "title": event.title,
           "details": event.details,
           "slug": event.slug,
-          "maximumAttendees": event.maximumAttendees
+          "maximumAttendees": event.maximumAttendees,
+          "attendeesAmount": eventAttendeesCount
         }
       },
       statusCode=200
