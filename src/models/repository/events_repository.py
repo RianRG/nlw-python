@@ -13,6 +13,7 @@ class EventsRepository:
         slug=data.get("slug"),
         maximumAttendees=data.get("maximumAttendees")
       )
+
       database.session.add(event)
       database.session.commit()
       return data

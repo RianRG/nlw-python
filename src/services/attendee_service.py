@@ -64,7 +64,7 @@ class AttendeeService:
         "id": attendee.id,
         "name": attendee.name,
         "email": attendee.email,
-        "checkinAt": attendee.checkedInAt,
+        "checkedAt": attendee.checkedInAt,
         "createdAt": attendee.createdAt
       })
 
