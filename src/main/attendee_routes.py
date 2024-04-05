@@ -14,3 +14,11 @@ def createAttendee(eventId: str):
 
   return jsonify(httpResponse.body), httpResponse.statusCode
 
+@attendeeRouteBp.route('/attendees/<attendeeId>/badge', methods=["GET"])
+def getAttendeeBadge(attendeeId: str):
+  httpRequest = HttpRequest(body=None, params={ "attendeeId": attendeeId })
+  attendeeService = AttendeeService()
+
+  httpResponse = attendeeService.getBadgeById(httpRequest)
+
+  return jsonify(httpResponse.body), httpResponse.statusCode

@@ -10,13 +10,11 @@ class AttendeeService:
     self.__attendeesRepository = AttendeesRepository()
     self.__eventsRepository = EventsRepository()
 
-  def add(self, request: HttpRequest) -> HttpResponse:
-    body = request.body
-    eventId = request.params["eventId"]
-    print(f"EVENTID::::: {eventId}")
+  def add(self, req: HttpRequest) -> HttpResponse:
+    body = req.body
+    eventId = req.params["eventId"]
 
     eventAttendeesCount = self.__eventsRepository.countEventAttendees(eventId)
-    print(f"KKKK::::::::::::::::::: {eventAttendeesCount}")
     if(
       eventAttendeesCount["attendeesAmount"] and 
       eventAttendeesCount["maximumAttendees"] <= eventAttendeesCount["attendeesAmount"]
@@ -27,7 +25,6 @@ class AttendeeService:
     body["eventId"] = eventId
 
     
-    print(f"BODY::::: {body}")
 
     self.__attendeesRepository.addAttendee(body)
 
@@ -35,6 +32,25 @@ class AttendeeService:
       body=None,
       statusCode=201
     )
+  
+  def getBadgeById(self, req: HttpRequest) -> HttpResponse:
+    attendeeId = req.params["attendeeId"]
+
+    badge = self.__attendeesRepository.getAttendeeBadgeById(attendeeId)
+
+    if not badge: raise Exception('Attendee not found!')
+
+    return HttpResponse(
+      body={
+        "badge": {
+          "name": badge.name,
+          "email": badge.email,
+          "eventTitle": badge.title
+        }
+      },
+      statusCode=200
+    )
+
 
 
 

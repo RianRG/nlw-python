@@ -24,6 +24,11 @@ class AttendeesRepository:
         query(Attendees)
         .join(Events, Events.id == Attendees.eventId)
         .filter(Attendees.id == attendeeId)
+        .with_entities(
+          Attendees.name,
+          Attendees.email,
+          Events.title
+        )
         .one()
       )
       return attendee
