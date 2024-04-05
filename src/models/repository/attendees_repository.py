@@ -3,20 +3,25 @@ from src.models.settings.connection import dbConnectionHandler
 from src.models.entities.attendees import Attendees
 from src.models.entities.events import Events
 from src.models.entities.checkIns import CheckIns
+from src.errors.error_types.http_conflict import HttpConflictError
+
 
 class AttendeesRepository:
   def addAttendee(self, data: Dict) -> Dict:
     with dbConnectionHandler as database:
-      attendee = Attendees(
-        id = data.get("uuid"),
-        name = data.get("name"),
-        email = data.get("email"),
-        eventId = data.get("eventId"),
-        createdAt = data.get("createdAt")
-      )
-      database.session.add(attendee)
-      database.session.commit()
-      return data
+      try:
+        attendee = Attendees(
+          id = data.get("uuid"),
+          name = data.get("name"),
+          email = data.get("email"),
+          eventId = data.get("eventId"),
+          createdAt = data.get("createdAt")
+        )
+        database.session.add(attendee)
+        database.session.commit()
+        return data
+      except:
+        raise HttpConflictError('Attendee already registered!')
   
   def getAttendeeBadgeById(self, attendeeId) -> Attendees:
     with dbConnectionHandler as database:

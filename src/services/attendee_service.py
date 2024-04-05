@@ -4,6 +4,8 @@ from src.models.repository.attendees_repository import AttendeesRepository
 from src.models.repository.events_repository import EventsRepository
 from src.http_types.http_request import HttpRequest
 from src.http_types.http_response import HttpResponse
+from src.errors.error_types.http_not_found import HttpNotFoundError
+from src.errors.error_types.http_conflict import HttpConflictError
 
 class AttendeeService:
   def __init__(self):
@@ -18,13 +20,11 @@ class AttendeeService:
     if(
       eventAttendeesCount["attendeesAmount"] and 
       eventAttendeesCount["maximumAttendees"] <= eventAttendeesCount["attendeesAmount"]
-    ): raise Exception('Max capacity reached!')
+    ): raise HttpConflictError('Max capacity reached!')
 
     body["uuid"] = str(uuid.uuid4())
 
     body["eventId"] = eventId
-
-    
 
     self.__attendeesRepository.addAttendee(body)
 
@@ -38,7 +38,7 @@ class AttendeeService:
 
     badge = self.__attendeesRepository.getAttendeeBadgeById(attendeeId)
 
-    if not badge: raise Exception('Attendee not found!')
+    if not badge: raise HttpNotFoundError('Attendee not found!')
 
     return HttpResponse(
       body={
@@ -55,7 +55,7 @@ class AttendeeService:
     eventId = req.params["eventId"]
     attendees = self.__attendeesRepository.getAttendeesByEventId(eventId)
 
-    if not attendees: raise Exception('There are no attendees here!')
+    if not attendees: raise HttpNotFoundError('There are no attendees here!')
 
     formattedAttendees = []
 

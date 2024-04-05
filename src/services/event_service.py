@@ -3,6 +3,7 @@ import uuid
 from src.models.repository.events_repository import EventsRepository
 from src.http_types.http_request import HttpRequest
 from src.http_types.http_response import HttpResponse
+from src.errors.error_types.http_not_found import HttpNotFoundError
 
 class EventsService:
   def __init__(self):
@@ -23,7 +24,7 @@ class EventsService:
     eventId = request.params["eventId"]
     event = self.__eventsRepository.getEventById(eventId)
 
-    if not event: raise Exception('Event not found!')
+    if not event: raise HttpNotFoundError('Event not found!')
 
     eventAttendeesCount = self.__eventsRepository.countEventAttendees(eventId)
 
