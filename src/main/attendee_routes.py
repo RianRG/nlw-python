@@ -16,9 +16,18 @@ def createAttendee(eventId: str):
 
 @attendeeRouteBp.route('/attendees/<attendeeId>/badge', methods=["GET"])
 def getAttendeeBadge(attendeeId: str):
-  httpRequest = HttpRequest(body=None, params={ "attendeeId": attendeeId })
+  httpRequest = HttpRequest(params={ "attendeeId": attendeeId })
   attendeeService = AttendeeService()
 
   httpResponse = attendeeService.getBadgeById(httpRequest)
+
+  return jsonify(httpResponse.body), httpResponse.statusCode
+
+@attendeeRouteBp.route('/events/<eventId>/attendees', methods=["GET"])
+def getAttendeesFromEvent(eventId: str):
+  httpRequest = HttpRequest(params={ "eventId": eventId })
+  attendeeService = AttendeeService()
+
+  httpResponse = attendeeService.getByEventId(httpRequest)
 
   return jsonify(httpResponse.body), httpResponse.statusCode

@@ -1,7 +1,8 @@
-from typing import Dict
+from typing import Dict, List
 from src.models.settings.connection import dbConnectionHandler
 from src.models.entities.attendees import Attendees
 from src.models.entities.events import Events
+from src.models.entities.checkIns import CheckIns
 
 class AttendeesRepository:
   def addAttendee(self, data: Dict) -> Dict:
@@ -32,3 +33,22 @@ class AttendeesRepository:
         .one()
       )
       return attendee
+  
+  def getAttendeesByEventId(self, eventId: str) -> List[Attendees]:
+    with dbConnectionHandler as database:
+      attendees = (
+        database.session
+        .query(Attendees)
+        .outerjoin(CheckIns, CheckIns.attendeeId == Attendees.id)
+        .filter(Attendees.eventId == eventId)
+        .with_entities(
+          Attendees.id,
+          Attendees.name,
+          Attendees.email,
+          CheckIns.createdAt.label('checkedInAt'),
+          Attendees.createdAt
+        )
+        .all()
+      )
+
+      return attendees

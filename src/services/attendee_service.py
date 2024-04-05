@@ -50,6 +50,30 @@ class AttendeeService:
       },
       statusCode=200
     )
+  
+  def getByEventId(self, req: HttpRequest) -> HttpResponse:
+    eventId = req.params["eventId"]
+    attendees = self.__attendeesRepository.getAttendeesByEventId(eventId)
+
+    if not attendees: raise Exception('There are no attendees here!')
+
+    formattedAttendees = []
+
+    for attendee in attendees:
+      formattedAttendees.append({
+        "id": attendee.id,
+        "name": attendee.name,
+        "email": attendee.email,
+        "checkinAt": attendee.checkedInAt,
+        "createdAt": attendee.createdAt
+      })
+
+    return HttpResponse(
+      body={
+        "attendees": formattedAttendees
+      },
+      statusCode=200
+    )
 
 
 
